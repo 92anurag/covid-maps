@@ -1,8 +1,4 @@
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -85,14 +81,6 @@ class Maps extends React.Component {
                 borderWidth: 0,
                 shadow: false
             },
-            // colorAxis: {
-            //     min: 0,
-            //     stops: [
-            //         [0, '#EFEFFF'],
-            //         [0.5, Highcharts.getOptions().colors[3]],
-            //         [1, Highcharts.color(Highcharts.getOptions().colors[3]).brighten(-0.5).get()]
-            //     ]
-            // },
             colorAxis: {
                 stops: [
                     [0, '#e8f7e9'],
@@ -147,19 +135,6 @@ class Maps extends React.Component {
     render() {
         return <div>
             <HighMaps config={this.config} />
-            {/* <Dialog
-                open={this.state.showDialog}
-                onClose={this.handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">{"Covid Detail State info"}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        <Info />
-                    </DialogContentText>
-                </DialogContent>
-            </Dialog>; */}
             <div className="dummyClick" ref={ref => {
                 this.dummyDiv = ref;}}></div>
             <Popover
