@@ -1,15 +1,91 @@
 import React from 'react';
 import Tabletop from 'tabletop';
 import './Map.css';
+import detailedViewData from './mapdata/detailed-info';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 const HighMaps = require('react-highcharts/ReactHighmaps');
 const indiaMapData = require('./mapdata/india-all-distributed');
+
+
+
+const StyledTableCell = withStyles(theme => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell);
+
+const StyledTableRow = withStyles(theme => ({
+    root: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default,
+        },
+    },
+}))(TableRow);
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 400,
+    },
+});
+
+
+function CustomizedTables(props) {
+    const classes = useStyles();
+
+    let data = {...props.data},
+        stateName = data["State"],
+        sourceLink = data['Source'];
+
+    delete data.State;
+    delete data.Source;
+
+    return <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+                <TableRow>
+                    <StyledTableCell>State</StyledTableCell>
+                    <StyledTableCell align="right">{stateName}</StyledTableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {Object.keys(data).map(row => (
+                    <StyledTableRow key={row}>
+                        <StyledTableCell component="th" scope="row">
+                            {row}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">{data[row]}</StyledTableCell>
+                    </StyledTableRow>
+                ))}
+                <StyledTableRow key="source">
+                    <StyledTableCell component="th" scope="row">
+                        Source
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{sourceLink}</StyledTableCell>
+                </StyledTableRow>
+            </TableBody>
+        </Table>
+    </TableContainer>;
+}
+
+
 
 class Maps extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            keyName: null,
+            stateName: null,
             dataAvailable: false
         }
         this.renderDetails = this.renderDetails.bind(this);
@@ -35,7 +111,6 @@ class Maps extends React.Component {
         Tabletop.init({
             key: '1dK3kzGfe5Kpn5-DQHQvJ6-qzq_4lNaX8fkfztPhlzfQ',
             callback: googleData => {
-                // console.log('google sheet data --->', googleData)
                 const newData = this.processData(googleData)
                 this.config = {
                     chart: {
@@ -93,8 +168,7 @@ class Maps extends React.Component {
                                 },
                                 showPopOver: (key) => {
                                     this.setState({
-                                        open: true,
-                                        keyName: key
+                                        stateName: key
                                     });
                                 }
                             }
@@ -112,13 +186,17 @@ class Maps extends React.Component {
     }
 
     renderDetails() {
-        return <div className="detailed-dialog"> This contains name {this.state.keyName}</div>
+        const data = detailedViewData.filter(row => row["State"].toLocaleLowerCase() === this.state.stateName.toLocaleLowerCase());
+        
+        return <div className="detailed-dialog">
+            <CustomizedTables data={data[0]}/>
+        </div>;
     }
 
     render() {
         return <div className="india-map-detailed-view">
             {this.state.dataAvailable && <div className="india-map"><HighMaps config={this.config}/></div>}
-            {this.state.keyName && this.renderDetails()}
+            {this.state.stateName && this.renderDetails()}
         </div>
     }
 }

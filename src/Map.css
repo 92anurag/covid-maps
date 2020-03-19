@@ -1,6 +1,7 @@
 .detailed-dialog {
     height: 800px;
-    width: 400px;
+    width: 650px;
+    padding-top: 100px;
 }
 
 .india-map-detailed-view {
@@ -10,5 +11,5 @@
 
 .india-map {
     width: 800px;
-    margin-left: 200px;
+    margin-left: 50px;
 }
