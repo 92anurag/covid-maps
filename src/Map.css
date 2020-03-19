@@ -1,0 +1,14 @@
+.detailed-dialog {
+    height: 800px;
+    width: 400px;
+}
+
+.india-map-detailed-view {
+    height: 800px;
+    display: flex;
+}
+
+.india-map {
+    width: 800px;
+    margin-left: 200px;
+}
