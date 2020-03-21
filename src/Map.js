@@ -3,7 +3,6 @@ import Tabletop from 'tabletop';
 import './Map.css';
 import detailedViewData from './mapdata/detailed-info';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,7 +12,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 const HighMaps = require('react-highcharts/ReactHighmaps');
 const indiaMapData = require('./mapdata/india-all-distributed');
-
 
 
 const StyledTableCell = withStyles(theme => ({
@@ -85,7 +83,7 @@ class Maps extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            stateName: null,
+            maxValueStateCode: null,
             dataAvailable: false
         }
         this.renderDetails = this.renderDetails.bind(this);
@@ -107,11 +105,31 @@ class Maps extends React.Component {
         return data;
     }
 
+    getMaxValueStateCode(data) {
+        let stateCode = null, 
+            ma = 0
+
+        if(data !== null && data.length !== 0) {
+            stateCode = data[0].code;
+            ma = data[0].value;
+
+            for(let i=1;i<data.length;i++) {
+                if(ma < data[i].value) {
+                    ma = data[i].value;
+                    stateCode = data[i].code;
+                }
+            }
+        }
+        return stateCode
+    }
+
+
     componentDidMount() {
         Tabletop.init({
             key: '1dK3kzGfe5Kpn5-DQHQvJ6-qzq_4lNaX8fkfztPhlzfQ',
             callback: googleData => {
-                const newData = this.processData(googleData)
+                const newData = this.processData(googleData),
+                    maxValueStateCode = this.getMaxValueStateCode(newData);
                 this.config = {
                     chart: {
                         height: 800
@@ -179,14 +197,14 @@ class Maps extends React.Component {
                         }
                     }]
                 }
-                this.setState({ dataAvailable: true });
+                this.setState({ dataAvailable: true, maxValueStateCode: maxValueStateCode });
             },
             simpleSheet: true
         });
     }
 
     renderDetails() {
-        const data = detailedViewData.filter(row => row["State"].toLocaleLowerCase() === this.state.stateName.toLocaleLowerCase());
+        const data = detailedViewData.filter(row => row["State"].toLocaleLowerCase() === this.state.maxValueStateCode.toLocaleLowerCase());
         
         return <div className="detailed-dialog">
             <CustomizedTables data={data[0]}/>
@@ -196,7 +214,7 @@ class Maps extends React.Component {
     render() {
         return <div className="india-map-detailed-view">
             {this.state.dataAvailable && <div className="india-map"><HighMaps config={this.config}/></div>}
-            {this.state.stateName && this.renderDetails()}
+            {this.state.maxValueStateCode && this.renderDetails()}
         </div>
     }
 }
