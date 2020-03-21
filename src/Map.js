@@ -1,11 +1,7 @@
 import React from 'react';
 import Tabletop from 'tabletop';
 import './Map.css';
-import detailedViewData from './mapdata/detailed-info';
-import CustomizedTables from './CustomizedTables';
 import MetaDataInfo from './MetadataInfo';
-// import { Map, GoogleApiWrapper } from 'google-maps-react';
-
 const HighMaps = require('react-highcharts/ReactHighmaps');
 const indiaMapData = require('./mapdata/india-all-distributed');
 

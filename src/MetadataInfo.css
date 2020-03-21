@@ -64,3 +64,7 @@ hr {
     text-align: right;
 }
 
+.metadata-info-container-covid-status-lockdown-value {
+    font-weight: bold;
+    color: #aa2d89;
+}

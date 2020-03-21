@@ -1,11 +1,13 @@
 import React from 'react';
+import {Map, GoogleApiWrapper} from 'google-maps-react';
+
 
 import './MetadataInfo.css'
 
 class MetaDataInfo extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+    // constructor(props) {
+    //     super(props);
+    // }
 
     render() {
         const data = this.props.data;
@@ -44,7 +46,7 @@ class MetaDataInfo extends React.Component {
                         </tr>
                     </table>
                     <div className="metadata-info-container-covid-status-lockdown">
-                        <p>state lockdown status: <span style={{color:"#aa2d89", fontWeight: 700}}>{data.lockDownStatus}</span></p>
+                        <p>state lockdown status: <span className="metadata-info-container-covid-status-lockdown-value">{data.lockDownStatus}</span></p>
                     </div>
                 </div>
             </div>
