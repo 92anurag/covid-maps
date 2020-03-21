@@ -2,80 +2,13 @@ import React from 'react';
 import Tabletop from 'tabletop';
 import './Map.css';
 import detailedViewData from './mapdata/detailed-info';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import CustomizedTables from './CustomizedTables';
+import MetaDataInfo from './MetadataInfo';
+// import { Map, GoogleApiWrapper } from 'google-maps-react';
+
 const HighMaps = require('react-highcharts/ReactHighmaps');
 const indiaMapData = require('./mapdata/india-all-distributed');
 
-
-const StyledTableCell = withStyles(theme => ({
-    head: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
-    body: {
-        fontSize: 14,
-    },
-}))(TableCell);
-
-const StyledTableRow = withStyles(theme => ({
-    root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default,
-        },
-    },
-}))(TableRow);
-
-const useStyles = makeStyles({
-    table: {
-        minWidth: 400,
-    },
-});
-
-
-function CustomizedTables(props) {
-    const classes = useStyles();
-
-    let data = {...props.data},
-        stateName = data["State"],
-        sourceLink = data['Source'];
-
-    delete data.State;
-    delete data.Source;
-
-    return <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="customized table">
-            <TableHead>
-                <TableRow>
-                    <StyledTableCell>State</StyledTableCell>
-                    <StyledTableCell align="right">{stateName}</StyledTableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {Object.keys(data).map(row => (
-                    <StyledTableRow key={row}>
-                        <StyledTableCell component="th" scope="row">
-                            {row}
-                        </StyledTableCell>
-                        <StyledTableCell align="right">{data[row]}</StyledTableCell>
-                    </StyledTableRow>
-                ))}
-                <StyledTableRow key="source">
-                    <StyledTableCell component="th" scope="row">
-                        Source
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{sourceLink}</StyledTableCell>
-                </StyledTableRow>
-            </TableBody>
-        </Table>
-    </TableContainer>;
-}
 
 
 
@@ -83,7 +16,7 @@ class Maps extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            maxValueStateCode: null,
+            stateMetadata: null,
             dataAvailable: false
         }
         this.renderDetails = this.renderDetails.bind(this);
@@ -99,28 +32,30 @@ class Maps extends React.Component {
                 name: row.name,
                 value: parseFloat(row.total),
                 deaths: row.deaths,
-                recoveries: row.recoveries
+                recoveries: row.recoveries,
+                helpline: row.helpline,
+                lockDownStatus: row.lockDownStatus
             }
         });
         return data;
     }
 
     getMaxValueStateCode(data) {
-        let stateCode = null, 
+        let stateMetadata = null, 
             ma = 0
 
         if(data !== null && data.length !== 0) {
-            stateCode = data[0].code;
+            stateMetadata = data[0];
             ma = data[0].value;
 
             for(let i=1;i<data.length;i++) {
                 if(ma < data[i].value) {
                     ma = data[i].value;
-                    stateCode = data[i].code;
+                    stateMetadata = data[i];
                 }
             }
         }
-        return stateCode
+        return stateMetadata;
     }
 
 
@@ -129,7 +64,8 @@ class Maps extends React.Component {
             key: '1dK3kzGfe5Kpn5-DQHQvJ6-qzq_4lNaX8fkfztPhlzfQ',
             callback: googleData => {
                 const newData = this.processData(googleData),
-                    maxValueStateCode = this.getMaxValueStateCode(newData);
+                    stateMetadata = this.getMaxValueStateCode(newData);
+                this.data = newData;
                 this.config = {
                     chart: {
                         height: 800
@@ -181,12 +117,13 @@ class Maps extends React.Component {
                         point: {
                             events: {
                                 click: function (evt) {
-                                    var code = this.code;
-                                    this.events.showPopOver(code)
+                                    var stateMetadata = this.options;
+                                    console.log(this);
+                                    this.events.showPopOver(stateMetadata)
                                 },
-                                showPopOver: (key) => {
+                                showPopOver: (stateMetadata) => {
                                     this.setState({
-                                        stateName: key
+                                        stateMetadata: stateMetadata
                                     });
                                 }
                             }
@@ -197,24 +134,22 @@ class Maps extends React.Component {
                         }
                     }]
                 }
-                this.setState({ dataAvailable: true, maxValueStateCode: maxValueStateCode });
+                this.setState({ dataAvailable: true, stateMetadata: stateMetadata });
             },
             simpleSheet: true
         });
     }
 
     renderDetails() {
-        const data = detailedViewData.filter(row => row["State"].toLocaleLowerCase() === this.state.maxValueStateCode.toLocaleLowerCase());
-        
-        return <div className="detailed-dialog">
-            <CustomizedTables data={data[0]}/>
-        </div>;
+        return ;
     }
 
     render() {
         return <div className="india-map-detailed-view">
             {this.state.dataAvailable && <div className="india-map"><HighMaps config={this.config}/></div>}
-            {this.state.maxValueStateCode && this.renderDetails()}
+            {this.state.stateMetadata && <div className="detailed-dialog">
+                <MetaDataInfo data={this.state.stateMetadata} />
+            </div>}
         </div>
     }
 }
