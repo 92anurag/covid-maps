@@ -10,31 +10,29 @@ export class MapContainer extends React.Component {
     constructor(props) {
         super(props);
         this.renderMarker = this.renderMarker.bind(this);
+        this.onMarkerClick = this.onMarkerClick.bind(this);
     }
 
-    onMarkerClick(props, marker, e) {
-        this.props.setMarkerInfo();
-        console.log(props.extraUrl);
+    onMarkerClick(props) {
+        this.props.setMarkerInfo(props.keyValue);
     }
 
     renderMarker() {
         return this.props.data.markerInfo.map((marker, idx) => {
             const lat = marker.geometry.location.lat,
-                long = marker.geometry.location.lng,
-                placeId = marker.place_id,
-                url = `https://www.google.com/maps/search/?api=1&query=${lat},${long}&query_place_id=${placeId}`;
+                long = marker.geometry.location.lng;
 
             return <Marker 
                 keyValue={idx}
                 onClick={this.onMarkerClick}
                 title={this.props.data.testCentres[idx]}
-                name={'SOMA'}
-                extraUrl={url}
+                name={this.props.data.testCentres[idx]}
                 position={{ lat: lat, lng: long}} />
         })
     }
 
     render() {
+        console.log("map data", this.props.data);
         return (
             <Map
                 google={this.props.google}
@@ -59,5 +57,5 @@ export class MapContainer extends React.Component {
 }
 
 export default GoogleApiWrapper({
-    apiKey: 'AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA'
+    apiKey: ''//'AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA'
 })(MapContainer);

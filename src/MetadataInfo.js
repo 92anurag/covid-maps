@@ -8,28 +8,43 @@ class MetaDataInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            markerInfo: null,
+            markerInfoDisplayed: null,
             name: ""
         };
+        this.setMarkerInfo = this.setMarkerInfo.bind(this);
+        this.getUrl = this.getUrl.bind(this);
     }
 
-    setMarkerInfo(markerInfo) {
-        console.log("nmarek", markerInfo);
-        this.setState({markerInfo: markerInfo});
+    setMarkerInfo(markerInfoId) {
+        this.setState({markerInfoDisplayed: markerInfoId});
     }
 
     static getDerivedStateFromProps(props, state) {
         if (props.data.name !== state.name) {
             return {
-                markerInfo: props.data.markerInfo,
+                markerInfoDisplayed: props.data.markerInfo.length!==0 ? 0: null,
                 name: props.data.name
             };
         }
         return null;
     }
 
+    getUrl() {
+        let url = null;
+
+        if(this.state.markerInfoDisplayed != null) {
+            const lat = this.props.data.markerInfo[0].geometry.location.lat,
+                long = this.props.data.markerInfo[0].geometry.location.lng,
+                placeId = this.props.data.markerInfo[0].place_id;
+            
+            url = `https://www.google.com/maps/search/?api=1&query=${lat},${long}&query_place_id=${placeId}`;
+        }
+        return url;
+    }
+
     render() {
-        const data = this.props.data;
+        const data = this.props.data,
+            url = this.getUrl();
 
         return <div className="metadata-info-container">
             <div className="metadata-info-container-header">
@@ -44,9 +59,17 @@ class MetaDataInfo extends React.Component {
                     <MapWithMarker setMarkerInfo={this.setMarkerInfo} data={this.props.data}/>
                 </div>
                 <hr></hr>
-                <div className="metadata-info-container-selected-pin-info">
-                    <img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png" />
-                </div>
+                {this.state.markerInfoDisplayed!=null && <div className="metadata-info-container-selected-pin-info">
+                    <div className="metadata-info-container-selected-pin-info-container">
+                        <img src="https://mt.googleapis.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,C2185B&scale=1.0" />
+                        <div className="metadata-info-container-selected-pin-info-container-name">
+                            <p>North Eastern Indira Gandhi Regional Institute of Health & Medical Science</p>
+                        </div>
+                    </div>
+                    <div className="metadata-info-container-selected-pin-info-link">
+                        <a href={url} target="_blank">google.map.link</a>
+                    </div>
+                </div>}
                 <hr></hr>
                 <div className="metadata-info-container-covid-status">
                     <table className="metadata-info-container-covid-status-table">

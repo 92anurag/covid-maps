@@ -28,6 +28,7 @@ class Maps extends React.Component {
         data = data.map(function(row) {
             let testCentres = [];
 
+            console.log(row);
             for (let i = 1; i <= 10; i++) {
                 const newKey = 'testingCentre' + i;
 
@@ -75,18 +76,16 @@ class Maps extends React.Component {
         Tabletop.init({
             key: '1dK3kzGfe5Kpn5-DQHQvJ6-qzq_4lNaX8fkfztPhlzfQ',
             simpleSheet: true
-        }).then((googleData, tabletop) => {
+        }).then((googleData) => {
             const newData = this.processData(googleData);
 
             return newData;
         }).then(async (data) => {
             const stateMetadata = this.getMaxValueStateCode(data);
 
-            for(let idx=0;idx<1;idx++) {
-                const testCentres = data[20].testCentres;
+            for(let idx=0;idx<data.length;idx++) {
+                const testCentres = data[idx].testCentres;
                 const markerInfo = [];
-
-                console.log(testCentres);
 
                 for (const place of testCentres) {
                     const encodePlace = encodeURI(place);
@@ -95,8 +94,8 @@ class Maps extends React.Component {
 
                     markerInfo.push(response.data.results[0]);
                 }
-
-                data["markerInfo"] = markerInfo;
+                console.log(markerInfo);
+                data[idx]["markerInfo"] = markerInfo;
             }
 
             this.data = data;
@@ -118,13 +117,21 @@ class Maps extends React.Component {
                     useHTML: true,
                     pointFormat:
                         '<span class="f32"><span class="flag"></span></span>' +
-                        "<span class='f44'> {point.code}: <b>{point.value}</b> cases </span> <br /> <span class='f44'>Deaths: {point.deaths}</span> <br /> <span class='f44'>Recoveries: {point.recoveries}</span>",
+                        "<span class='f44'> {point.name}: <b>{point.value}</b> cases </span> <br /> <span class='f44'>Deaths: {point.deaths}</span> <br /> <span class='f44'>Recoveries: {point.recoveries}</span>",
                 },
                 colorAxis: {
                     stops: [
-                        [0, '#e8f7e9'],
-                        [0.5, '#ea772a'],
-                        [1, '#fc1307']
+                        [0, '#d5eef7'],
+                        [0.1, '#0000FA'],
+                        [0.2, '#004DFF'],
+                        [0.3, '#00B4FF'],
+                        [0.4, '#2CFFCB'],
+                        [0.5, '#80FF77'],
+                        [0.6, '#D1FF26'],
+                        [0.7, '#FFC500'],
+                        [0.8, '#FF6800'],
+                        [0.9, '#ED0400'],
+                        [1, '#880000']
                     ],
                     min: 0
                 },
