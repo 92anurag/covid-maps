@@ -7,11 +7,14 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
     "google-maps-react": "^2.0.2",
     "highcharts": "^8.0.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-geocode": "^0.2.1",
     "react-highcharts": "^16.1.0",
+    "react-read-pdf": "^2.0.9",
     "react-scripts": "3.4.0",
     "tabletop": "^1.6.2"
   },
@@ -35,5 +38,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "pdf2json": "^1.2.0"
   }
 }

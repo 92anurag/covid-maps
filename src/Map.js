@@ -2,9 +2,12 @@ import React from 'react';
 import Tabletop from 'tabletop';
 import './Map.css';
 import MetaDataInfo from './MetadataInfo';
+import Geocode from "react-geocode";
+import { Marker } from 'google-maps-react';
+
 const HighMaps = require('react-highcharts/ReactHighmaps');
 const indiaMapData = require('./mapdata/india-all-distributed');
-
+const axios = require('axios');
 
 
 
@@ -21,8 +24,18 @@ class Maps extends React.Component {
 
     processData(googleData) {
         let data = [...googleData];
+  
+        data = data.map(function(row) {
+            let testCentres = [];
 
-        data = data.map(row => {
+            for (let i = 1; i <= 10; i++) {
+                const newKey = 'testingCentre' + i;
+
+                if (row[newKey] !== '' && row[newKey] !== undefined && row[newKey]!==null) {
+                    testCentres.push(row[newKey]);
+                }
+            }
+
             return {
                 code: row.code.toLowerCase(),
                 name: row.name,
@@ -30,7 +43,10 @@ class Maps extends React.Component {
                 deaths: row.deaths,
                 recoveries: row.recoveries,
                 helpline: row.helpline,
-                lockDownStatus: row.lockDownStatus
+                lockDownStatus: row.lockDownStatus,
+                latitude: row.latitude,
+                longitude: row.longitude,
+                testCentres: testCentres
             }
         });
         return data;
@@ -58,81 +74,102 @@ class Maps extends React.Component {
     componentDidMount() {
         Tabletop.init({
             key: '1dK3kzGfe5Kpn5-DQHQvJ6-qzq_4lNaX8fkfztPhlzfQ',
-            callback: googleData => {
-                const newData = this.processData(googleData),
-                    stateMetadata = this.getMaxValueStateCode(newData);
-                this.data = newData;
-                this.config = {
-                    chart: {
-                        height: 800
-                    },
-                    title: {
-                        text: "COVID India Cases"
-                    },
-                    tooltip: {
-                        backgroundColor: "#fff",
-                        borderWidth: 0,
-                        distance: 2,
-                        followPointer: false,
-                        followTouchMove: false,
-                        shadow: false,
-                        useHTML: true,
-                        pointFormat:
-                            '<span class="f32"><span class="flag"></span></span>' +
-                            "<span class='f44'> {point.code}: <b>{point.value}</b> cases </span> <br /> <span class='f44'>Deaths: {point.deaths}</span> <br /> <span class='f44'>Recoveries: {point.recoveries}</span>",
-                    },
-                    colorAxis: {
-                        stops: [
-                            [0, '#e8f7e9'],
-                            [0.5, '#ea772a'],
-                            [1, '#fc1307']
-                        ],
-                        min: 0
-                    },
-                    legend: {
-                        title: {
-                            text: "Confirmed COVID Cases"
-                        },
-                        align: "left",
-                        verticalAlign: "bottom",
-                        valueDecimals: 0,
-                        backgroundColor: "rgba(255,255,255,0.9)",
-                        symbolRadius: 0,
-                        symbolHeight: 14
-                    },
-                    series: [{
-                        data: newData,
-                        mapData: indiaMapData,
-                        joinBy: null,
-                        name: 'Covid',
-                        states: {
-                            hover: {
-                                color: "#07cffc"
-                            }
-                        },
-                        point: {
-                            events: {
-                                click: function (evt) {
-                                    var stateMetadata = this.options;
-                                    console.log(this);
-                                    this.events.showPopOver(stateMetadata)
-                                },
-                                showPopOver: (stateMetadata) => {
-                                    this.setState({
-                                        stateMetadata: stateMetadata
-                                    });
-                                }
-                            }
-                        },
-                        dataLabels: {
-                            enabled: true,
-                            format: "{point.job}"
-                        }
-                    }]
-                }
-                this.setState({ dataAvailable: true, stateMetadata: stateMetadata });
-            },
             simpleSheet: true
+        }).then((googleData, tabletop) => {
+            const newData = this.processData(googleData);
+
+            return newData;
+        }).then(async (data) => {
+            const stateMetadata = this.getMaxValueStateCode(data);
+
+            for(let idx=0;idx<1;idx++) {
+                const testCentres = data[20].testCentres;
+                const markerInfo = [];
+
+                console.log(testCentres);
+
+                for (const place of testCentres) {
+                    const encodePlace = encodeURI(place);
+                    const placeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodePlace + "&key=AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA";
+                    const response = await axios.get(placeUrl);
+
+                    markerInfo.push(response.data.results[0]);
+                }
+
+                data["markerInfo"] = markerInfo;
+            }
+
+            this.data = data;
+
+            this.config = {
+                chart: {
+                    height: 800
+                },
+                title: {
+                    text: "COVID India Cases"
+                },
+                tooltip: {
+                    backgroundColor: "#fff",
+                    borderWidth: 0,
+                    distance: 2,
+                    followPointer: false,
+                    followTouchMove: false,
+                    shadow: false,
+                    useHTML: true,
+                    pointFormat:
+                        '<span class="f32"><span class="flag"></span></span>' +
+                        "<span class='f44'> {point.code}: <b>{point.value}</b> cases </span> <br /> <span class='f44'>Deaths: {point.deaths}</span> <br /> <span class='f44'>Recoveries: {point.recoveries}</span>",
+                },
+                colorAxis: {
+                    stops: [
+                        [0, '#e8f7e9'],
+                        [0.5, '#ea772a'],
+                        [1, '#fc1307']
+                    ],
+                    min: 0
+                },
+                legend: {
+                    title: {
+                        text: "Confirmed COVID Cases"
+                    },
+                    align: "left",
+                    verticalAlign: "bottom",
+                    valueDecimals: 0,
+                    backgroundColor: "rgba(255,255,255,0.9)",
+                    symbolRadius: 0,
+                    symbolHeight: 14
+                },
+                series: [{
+                    data: data,
+                    mapData: indiaMapData,
+                    joinBy: null,
+                    name: 'Covid',
+                    states: {
+                        hover: {
+                            color: "#07cffc"
+                        }
+                    },
+                    point: {
+                        events: {
+                            click: function (evt) {
+                                var stateMetadata = this.options;
+                                console.log(this);
+                                this.events.showPopOver(stateMetadata)
+                            },
+                            showPopOver: (stateMetadata) => {
+                                this.setState({
+                                    stateMetadata: stateMetadata
+                                });
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: "{point.job}"
+                    }
+                }]
+            }
+            this.setState({ dataAvailable: true, stateMetadata: stateMetadata });
         });
     }
 

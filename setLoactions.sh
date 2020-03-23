@@ -1,0 +1,1 @@
+curl https://maps.googleapis.com/maps/api/geocode/json?address=Indira%20Gandhi%20Government%20Medical%20College%2C%20Nagpur&key=AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA

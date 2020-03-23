@@ -1,21 +1,39 @@
 import React from 'react';
-import {Map, GoogleApiWrapper} from 'google-maps-react';
-
+import MapWithMarker from './MapWithMarker';
 
 import './MetadataInfo.css'
 
+
 class MetaDataInfo extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    // }
+    constructor(props) {
+        super(props);
+        this.state = {
+            markerInfo: null,
+            name: ""
+        };
+    }
+
+    setMarkerInfo(markerInfo) {
+        console.log("nmarek", markerInfo);
+        this.setState({markerInfo: markerInfo});
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        if (props.data.name !== state.name) {
+            return {
+                markerInfo: props.data.markerInfo,
+                name: props.data.name
+            };
+        }
+        return null;
+    }
 
     render() {
         const data = this.props.data;
 
-        console.log("data", data);
         return <div className="metadata-info-container">
             <div className="metadata-info-container-header">
-                <p>{data.name.toUpperCase()}</p>
+                <p>{this.state.name.toUpperCase()}</p>
             </div>
             <div className="metadata-info-container-body">
                 <div className="metadata-info-container-helpline">
@@ -23,11 +41,11 @@ class MetaDataInfo extends React.Component {
                 </div>
                 <hr></hr>
                 <div className="metadata-info-container-maps">
-                    <p>Helpline No. - {data.helpline}</p>
+                    <MapWithMarker setMarkerInfo={this.setMarkerInfo} data={this.props.data}/>
                 </div>
                 <hr></hr>
                 <div className="metadata-info-container-selected-pin-info">
-                    <p>Helpline No. - {data.helpline}</p>
+                    <img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png" />
                 </div>
                 <hr></hr>
                 <div className="metadata-info-container-covid-status">
