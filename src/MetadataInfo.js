@@ -61,7 +61,7 @@ class MetaDataInfo extends React.Component {
                 <hr></hr>
                 {this.state.markerInfoDisplayed!=null && <div className="metadata-info-container-selected-pin-info">
                     <div className="metadata-info-container-selected-pin-info-container">
-                        <img src="https://mt.googleapis.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,C2185B&scale=1.0" />
+                        <img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png" />
                         <div className="metadata-info-container-selected-pin-info-container-name">
                             <p>North Eastern Indira Gandhi Regional Institute of Health & Medical Science</p>
                         </div>
