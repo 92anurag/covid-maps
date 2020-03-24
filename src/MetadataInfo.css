@@ -65,12 +65,13 @@ hr {
 }
 
 .metadata-info-container-selected-pin-info-container img {
-    width: 27px;
+    width: 40px;
     height: 40px;
 }
 
 .metadata-info-container-selected-pin-info-container-name p {
     margin-top: 0px;
+    margin-left: 10px;
 }
 
 .metadata-info-container-selected-pin-info-link {

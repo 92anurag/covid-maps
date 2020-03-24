@@ -2,8 +2,6 @@ import React from 'react';
 import Tabletop from 'tabletop';
 import './Map.css';
 import MetaDataInfo from './MetadataInfo';
-import Geocode from "react-geocode";
-import { Marker } from 'google-maps-react';
 
 const HighMaps = require('react-highcharts/ReactHighmaps');
 const indiaMapData = require('./mapdata/india-all-distributed');
@@ -26,14 +24,54 @@ class Maps extends React.Component {
         let data = [...googleData];
   
         data = data.map(function(row) {
-            let testCentres = [];
-
             console.log(row);
-            for (let i = 1; i <= 10; i++) {
+            let testCentres = [],
+                markerInfo = [];
+
+            for (let i = 1; i <= 20; i++) {
                 const newKey = 'testingCentre' + i;
 
-                if (row[newKey] !== '' && row[newKey] !== undefined && row[newKey]!==null) {
-                    testCentres.push(row[newKey]);
+                if (row[newKey] !== '' && row[newKey] !== undefined && row[newKey] !== null) {
+                    testCentres.push({name: row[newKey], gov: true});
+                }
+            }
+
+            for (let i = 1; i <= 10; i++) {
+                const newKey = 'privateCentre' + i;
+
+                if (row[newKey] !== '' && row[newKey] !== undefined && row[newKey] !== null) {
+                    testCentres.push({name: row[newKey], gov: false});
+                }
+            }
+
+            for (let i = 1; i <= 20; i++) {
+                const newKey = 'testingCentreMetadata' + i;
+
+                console.log(newKey);
+                if (row[newKey] !== '' && row[newKey] !== undefined && row[newKey] !== null) {  
+
+                    const markerData = row[newKey].split(',');
+
+                    markerInfo.push({
+                        lat: parseFloat(markerData[0]),
+                        lng: parseFloat(markerData[1]),
+                        place_id: markerData[2]
+                     });
+                }
+            }
+
+            for (let i = 1; i <= 20; i++) {
+                const newKey = 'privateCentreMetadata' + i;
+
+                if (row[newKey] !== '' && row[newKey] !== undefined && row[newKey] !== null) {
+
+                    const markerData = row[newKey].split(',');
+
+                    markerInfo.push({
+                        lat: parseFloat(markerData[0]),
+                        lng: parseFloat(markerData[1]),
+                        place_id: markerData[2]
+                    });
                 }
             }
 
@@ -47,7 +85,8 @@ class Maps extends React.Component {
                 lockDownStatus: row.lockDownStatus,
                 latitude: row.latitude,
                 longitude: row.longitude,
-                testCentres: testCentres
+                testCentres: testCentres,
+                markerInfo: markerInfo
             }
         });
         return data;
@@ -83,22 +122,23 @@ class Maps extends React.Component {
         }).then(async (data) => {
             const stateMetadata = this.getMaxValueStateCode(data);
 
-            for(let idx=0;idx<data.length;idx++) {
-                const testCentres = data[idx].testCentres;
-                const markerInfo = [];
+            // for(let idx=0;idx<data.length;idx++) {
+            //     const testCentres = data[idx].testCentres;
+            //     const markerInfo = [];
 
-                for (const place of testCentres) {
-                    const encodePlace = encodeURI(place);
-                    const placeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodePlace + "&key=AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA";
-                    const response = await axios.get(placeUrl);
+            //     for (const place of testCentres) {
+            //         const encodePlace = encodeURI(place.name);
+            //         const placeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodePlace + "&key=AIzaSyBughRH5p8t5wNMDZBR7flrMBlMFSPH67Y";
+            //         const response = await axios.get(placeUrl);
 
-                    markerInfo.push(response.data.results[0]);
-                }
-                console.log(markerInfo);
-                data[idx]["markerInfo"] = markerInfo;
-            }
+            //         markerInfo.push(response.data.results[0]);
+            //     }
+            //     data[idx]["markerInfo"] = markerInfo;
+            // }
 
             this.data = data;
+
+            window.data = data;
 
             this.config = {
                 chart: {

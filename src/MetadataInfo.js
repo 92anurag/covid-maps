@@ -13,6 +13,7 @@ class MetaDataInfo extends React.Component {
         };
         this.setMarkerInfo = this.setMarkerInfo.bind(this);
         this.getUrl = this.getUrl.bind(this);
+        this.getMarkerImageUrl = this.getMarkerImageUrl.bind(this);
     }
 
     setMarkerInfo(markerInfoId) {
@@ -34,8 +35,8 @@ class MetaDataInfo extends React.Component {
             idx = this.state.markerInfoDisplayed;
 
         if(this.state.markerInfoDisplayed != null) {
-            const lat = this.props.data.markerInfo[idx].geometry.location.lat,
-                long = this.props.data.markerInfo[idx].geometry.location.lng,
+            const lat = this.props.data.markerInfo[idx].lat,
+                long = this.props.data.markerInfo[idx].lng,
                 placeId = this.props.data.markerInfo[idx].place_id;
             
             url = `https://www.google.com/maps/search/?api=1&query=${lat},${long}&query_place_id=${placeId}`;
@@ -43,9 +44,21 @@ class MetaDataInfo extends React.Component {
         return url;
     }
 
+    getMarkerImageUrl() {
+        let url = null,
+            idx = this.state.markerInfoDisplayed;
+
+
+        if (idx != null) {
+            url = this.props.data.testCentres[idx].gov ? "https://mt.googleapis.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,E65100&scale=1.0" : "https://mt.googleapis.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,0288D1&scale=1.0";
+        }
+        return url;
+    }
+
     render() {
         const data = this.props.data,
-            url = this.getUrl();
+            url = this.getUrl(),
+            src = this.getMarkerImageUrl();
 
         return <div className="metadata-info-container">
             <div className="metadata-info-container-header">
@@ -62,9 +75,9 @@ class MetaDataInfo extends React.Component {
                 <hr></hr>
                 {this.state.markerInfoDisplayed!=null && <div className="metadata-info-container-selected-pin-info">
                     <div className="metadata-info-container-selected-pin-info-container">
-                        <img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png" />
+                        <img alt="" src={src} />
                         <div className="metadata-info-container-selected-pin-info-container-name">
-                            <p>{this.props.data.testCentres[this.state.markerInfoDisplayed]}</p>
+                            <p>{this.props.data.testCentres[this.state.markerInfoDisplayed].name}</p>
                         </div>
                     </div>
                     <div className="metadata-info-container-selected-pin-info-link">

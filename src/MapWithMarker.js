@@ -13,21 +13,22 @@ export class MapContainer extends React.Component {
         this.onMarkerClick = this.onMarkerClick.bind(this);
     }
 
-    onMarkerClick(val) {
-        console.log(val)
+    onMarkerClick(val, map, clickEvent) {
         this.props.setMarkerInfo(val.keyValue);
     }
 
     renderMarker() {
         return this.props.data.markerInfo.map((marker, idx) => {
-            const lat = marker.geometry.location.lat,
-                long = marker.geometry.location.lng;
+            const lat = marker.lat,
+                long = marker.lng;
 
             return <Marker 
                 keyValue={idx}
-                onClick={(val) => this.onMarkerClick(val)}
-                title={this.props.data.testCentres[idx]}
-                name={this.props.data.testCentres[idx]}
+                disableDoubleClickZoom={true}
+                onClick={(val, map, clickEvent) => this.onMarkerClick(val, map, clickEvent)}
+                icon={this.props.data.testCentres[idx].gov ? "https://mt.googleapis.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,E65100&scale=1.0" : "https://mt.googleapis.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,0288D1&scale=1.0"}
+                title={this.props.data.testCentres[idx].name}
+                name={this.props.data.testCentres[idx].name}
                 position={{ lat: lat, lng: long}} />
         })
     }
@@ -47,8 +48,6 @@ export class MapContainer extends React.Component {
                     lat: this.props.data.latitude,
                     lng: this.props.data.longitude
                 }}
-                disableDefaultUI={true}
-                gestureHandling='none'
                 mapTypeId='terrain'
             >
                 {this.props.data.markerInfo && this.props.data.markerInfo.length !==0 && this.renderMarker()}
@@ -58,5 +57,5 @@ export class MapContainer extends React.Component {
 }
 
 export default GoogleApiWrapper({
-    apiKey: 'AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA'
+    apiKey: 'AIzaSyBughRH5p8t5wNMDZBR7flrMBlMFSPH67Y'
 })(MapContainer);
