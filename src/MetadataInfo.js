@@ -26,16 +26,17 @@ class MetaDataInfo extends React.Component {
                 name: props.data.name
             };
         }
-        return null;
+        return state;
     }
 
     getUrl() {
-        let url = null;
+        let url = null,
+            idx = this.state.markerInfoDisplayed;
 
         if(this.state.markerInfoDisplayed != null) {
-            const lat = this.props.data.markerInfo[0].geometry.location.lat,
-                long = this.props.data.markerInfo[0].geometry.location.lng,
-                placeId = this.props.data.markerInfo[0].place_id;
+            const lat = this.props.data.markerInfo[idx].geometry.location.lat,
+                long = this.props.data.markerInfo[idx].geometry.location.lng,
+                placeId = this.props.data.markerInfo[idx].place_id;
             
             url = `https://www.google.com/maps/search/?api=1&query=${lat},${long}&query_place_id=${placeId}`;
         }
@@ -63,7 +64,7 @@ class MetaDataInfo extends React.Component {
                     <div className="metadata-info-container-selected-pin-info-container">
                         <img src="https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png" />
                         <div className="metadata-info-container-selected-pin-info-container-name">
-                            <p>North Eastern Indira Gandhi Regional Institute of Health & Medical Science</p>
+                            <p>{this.props.data.testCentres[this.state.markerInfoDisplayed]}</p>
                         </div>
                     </div>
                     <div className="metadata-info-container-selected-pin-info-link">

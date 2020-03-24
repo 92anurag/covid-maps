@@ -13,8 +13,9 @@ export class MapContainer extends React.Component {
         this.onMarkerClick = this.onMarkerClick.bind(this);
     }
 
-    onMarkerClick(props) {
-        this.props.setMarkerInfo(props.keyValue);
+    onMarkerClick(val) {
+        console.log(val)
+        this.props.setMarkerInfo(val.keyValue);
     }
 
     renderMarker() {
@@ -24,7 +25,7 @@ export class MapContainer extends React.Component {
 
             return <Marker 
                 keyValue={idx}
-                onClick={this.onMarkerClick}
+                onClick={(val) => this.onMarkerClick(val)}
                 title={this.props.data.testCentres[idx]}
                 name={this.props.data.testCentres[idx]}
                 position={{ lat: lat, lng: long}} />
@@ -57,5 +58,5 @@ export class MapContainer extends React.Component {
 }
 
 export default GoogleApiWrapper({
-    apiKey: ''//'AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA'
+    apiKey: 'AIzaSyBoCnvblhgyR0-hqteGlsLs0GlCa5-8jdA'
 })(MapContainer);
