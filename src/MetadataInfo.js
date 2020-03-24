@@ -72,6 +72,9 @@ class MetaDataInfo extends React.Component {
                 <div className="metadata-info-container-maps">
                     <MapWithMarker setMarkerInfo={this.setMarkerInfo} data={this.props.data}/>
                 </div>
+                <div className="metadata-info-container-maps-full-testing">
+                    <a href="https://covidindia.org/testing/" target="_blank">Link to all testing centres</a>
+                </div>
                 <hr></hr>
                 {this.state.markerInfoDisplayed!=null && <div className="metadata-info-container-selected-pin-info">
                     <div className="metadata-info-container-selected-pin-info-container">
@@ -100,9 +103,9 @@ class MetaDataInfo extends React.Component {
                             <td className="metadata-info-container-covid-status-value">{data.recoveries}</td>
                         </tr>
                     </table>
-                    <div className="metadata-info-container-covid-status-lockdown">
+                    {/* <div className="metadata-info-container-covid-status-lockdown">
                         <p>state lockdown status: <span className="metadata-info-container-covid-status-lockdown-value">{data.lockDownStatus}</span></p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>;

@@ -55,6 +55,16 @@ hr {
     margin-bottom: 10px;
 }
 
+.metadata-info-container-maps-full-testing {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-bottom: 10px;
+}
+
+.metadata-info-container-maps-full-testing a {
+    z-index: 999;
+}
+
 .metadata-info-container-selected-pin-info {
     margin-top: 10px;
 }
