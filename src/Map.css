@@ -1,21 +1,23 @@
-.detailed-dialog {
-    padding-top: 25px;
+@media screen and (min-width: 400px) {
+    .detailed-dialog {
+        max-width: 400px;
+        min-width: 400px;
+    }
 }
 
-@media screen and (min-width: 401px) {
-    .india-map-detailed-view {
-        width: 400px;
+@media screen and (min-width: 1010px) {
+    .detailed-dialog {
+        magin-left: 10px;
+        margin: auto;
     }
 }
 
 .india-map-detailed-view {
-    height: 800px;
     display: flex;
 }
 
 @media screen and (max-width: 999px) {
     .india-map-detailed-view {
-        height: 800px;
         display: flex;
         flex-direction: column;
     }  
