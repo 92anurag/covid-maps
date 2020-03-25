@@ -99,15 +99,18 @@ hr {
 .metadata-info-container-covid-status-table {
     width: 100%;
     border-spacing: 0 10px;
+    border: 0;
 }
 
 .metadata-info-container-covid-status-type { 
     text-align: left;
+    border: 0;
 }
 
 .metadata-info-container-covid-status-value { 
     text-align: right;
     font-weight: bold;
+    border: 0;
 }
 
 .metadata-info-container-covid-status-lockdown-value {

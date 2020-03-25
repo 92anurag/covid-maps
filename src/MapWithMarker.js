@@ -2,7 +2,7 @@ import React from 'react';
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const mapStyles = {
-    width: window.innerWidth >= 460 ? '342px' : `${window.innerWidth - 118}px`,
+    width: window.innerWidth >= 480 ? '342px' : `${window.innerWidth - 138}px`,
     height: '300px'
 };
 
@@ -34,7 +34,6 @@ export class MapContainer extends React.Component {
     }
 
     render() {
-        console.log("map data", this.props.data);
         return (
             <Map
                 google={this.props.google}

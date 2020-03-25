@@ -22,7 +22,6 @@ class Maps extends React.Component {
         let data = [...googleData];
   
         data = data.map(function(row) {
-            console.log(row);
             let testCentres = [],
                 markerInfo = [];
 
@@ -45,7 +44,6 @@ class Maps extends React.Component {
             for (let i = 1; i <= 20; i++) {
                 const newKey = 'testingCentreMetadata' + i;
 
-                console.log(newKey);
                 if (row[newKey] !== '' && row[newKey] !== undefined && row[newKey] !== null) {  
 
                     const markerData = row[newKey].split(',');
@@ -199,7 +197,6 @@ class Maps extends React.Component {
                         events: {
                             click: function (evt) {
                                 var stateMetadata = this.options;
-                                console.log(this);
                                 this.events.showPopOver(stateMetadata)
                             },
                             showPopOver: (stateMetadata) => {
