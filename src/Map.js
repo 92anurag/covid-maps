@@ -118,20 +118,6 @@ class Maps extends React.Component {
         }).then(async (data) => {
             const stateMetadata = this.getMaxValueStateCode(data);
 
-            // for(let idx=0;idx<data.length;idx++) {
-            //     const testCentres = data[idx].testCentres;
-            //     const markerInfo = [];
-
-            //     for (const place of testCentres) {
-            //         const encodePlace = encodeURI(place.name);
-            //         const placeUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodePlace + "&key=AIzaSyBughRH5p8t5wNMDZBR7flrMBlMFSPH67Y";
-            //         const response = await axios.get(placeUrl);
-
-            //         markerInfo.push(response.data.results[0]);
-            //     }
-            //     data[idx]["markerInfo"] = markerInfo;
-            // }
-
             this.data = data;
 
             window.data = data;
