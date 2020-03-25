@@ -2,7 +2,7 @@ import React from 'react';
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const mapStyles = {
-    width: window.innerWidth >= 400 ? '342px' : `${window.innerWidth - 58}px`,
+    width: window.innerWidth >= 460 ? '342px' : `${window.innerWidth - 118}px`,
     height: '300px'
 };
 

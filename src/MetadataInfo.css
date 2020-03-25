@@ -82,6 +82,7 @@ hr {
 .metadata-info-container-selected-pin-info-container-name p {
     margin-top: 0px;
     margin-left: 10px;
+    text-align: left;
 }
 
 .metadata-info-container-selected-pin-info-link {

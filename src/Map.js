@@ -5,8 +5,6 @@ import MetaDataInfo from './MetadataInfo';
 
 const HighMaps = require('react-highcharts/ReactHighmaps');
 const indiaMapData = require('./mapdata/india-all-distributed');
-const axios = require('axios');
-
 
 
 class Maps extends React.Component {
