@@ -142,7 +142,8 @@ class Maps extends React.Component {
 
             this.config = {
                 chart: {
-                    height: 800
+                    width: window.innerWidth <= 600 ? window.innerWidth : 600, 
+                    height: window.innerWidth <= 600 ? (window.innerWidth * 4 / 3) : 800
                 },
                 title: {
                     text: "COVID India Cases"

@@ -1,7 +1,11 @@
 .detailed-dialog {
-    height: 800px;
-    width: 400px;
     padding-top: 25px;
+}
+
+@media screen and (min-width: 401px) {
+    .india-map-detailed-view {
+        width: 400px;
+    }
 }
 
 .india-map-detailed-view {
@@ -9,7 +13,10 @@
     display: flex;
 }
 
-.india-map {
-    width: 800px;
-    margin-left: 50px;
+@media screen and (max-width: 999px) {
+    .india-map-detailed-view {
+        height: 800px;
+        display: flex;
+        flex-direction: column;
+    }  
 }
